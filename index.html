@@ -40,6 +40,10 @@
   </nav>
   <div class="content" id="home">
     Home page
+    <br>
+    <input type="text" id="subject" placeholder="Enter a subject"><br>
+    <textarea id="content" placeholder="Enter the content"></textarea><br>
+    <button id="saveNote">Save</button>
   </div>
   <div class="content" id="screen2">
     This is screen 2
@@ -52,8 +56,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
       
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 
     <script>
+
+      var db = new Dexie("notes_database");
+      db.version(1).stores({
+          notes: 'subject'
+      });
+
+      //db.notes.put({subject: "test"});
+
+
       $(document).ready(function() {
 
         function hideScreens() {
@@ -64,6 +78,13 @@
           hideScreens();
           var target = $(this).attr("href");
           $(target).show();
+        });
+
+
+        $("#saveNote").on("click", function() {
+          var subject = $("#subject").val();
+          var content = $("#content").val();
+          db.notes.put({subject: subject, content: content});
         });
 
       });
