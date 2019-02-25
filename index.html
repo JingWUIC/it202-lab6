@@ -30,7 +30,7 @@
         <a class="nav-link" href="#home">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#screen2">Screen 2</a>
+        <a class="nav-link" href="#list">List</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#screen3">Screen 3</a>
@@ -45,8 +45,8 @@
     <textarea id="content" placeholder="Enter the content"></textarea><br>
     <button id="saveNote">Save</button>
   </div>
-  <div class="content" id="screen2">
-    This is screen 2
+  <div class="content" id="list">
+    List
   </div>
   <div class="content" id="screen3">
     This is screen 3
@@ -60,31 +60,65 @@
 
     <script>
 
-      var db = new Dexie("notes_database");
+      var 
+      // loop through notes
+      db = new Dexie("notes_database");
+      
+      // loop through notes
       db.version(1).stores({
-          notes: 'subject'
+          notes: "subject"
       });
 
-      //db.notes.put({subject: "test"});
+      //
+      // loop through notes
+      db.notes.put({subject: "test"});
 
 
       $(document).ready(function() {
 
+        $("#home").show();
+
+
         function hideScreens() {
           $(".content").hide();
+        }
+
+
+        function loadNotesList() {
+          // clear contents
+          $("#list").empty();
+          // loop through notes
+          db.notes.each(function(note) {
+            
+            var p = $("<p>");
+            p.text(note.subject);
+            
+            $("#list").append(p);
+          });
         }
 
         $(".nav-link").on("click", function(){
           hideScreens();
           var target = $(this).attr("href");
           $(target).show();
+
+          if(target == "#list") {
+            loadNotesList();
+
+
+          }
+
+
+
         });
 
 
         $("#saveNote").on("click", function() {
           var subject = $("#subject").val();
           var content = $("#content").val();
-          db.notes.put({subject: subject, content: content});
+          
+          // loop through notes
+          db.notes.put({subject: subject, content: content, date: new Date()});
         });
 
       });
